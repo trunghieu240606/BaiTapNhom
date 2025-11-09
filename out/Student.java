@@ -21,10 +21,17 @@ public class Student {
         else return "KÉM";
     }
     
-    public String getMaSoSinhVien() { return maSoSinhVien; }
-    public String getHoTen() { return hoTen; }
-    public double getDiemTrungBinh() { return diemTrungBinh; }
-    public String getKetQuaHocTap() { return ketQuaHocTap; }
+    public String getMaSoSinhVien() { 
+        return maSoSinhVien; 
+    }
+    public String getHoTen() {
+         return hoTen; 
+    }
+    public double getDiemTrungBinh() {
+         return diemTrungBinh; }
+    public String getKetQuaHocTap() { 
+        return ketQuaHocTap; 
+    }
     
     public void setDiemTrungBinh(double diemTrungBinh) {
         this.diemTrungBinh = diemTrungBinh;

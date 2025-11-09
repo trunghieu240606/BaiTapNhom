@@ -31,7 +31,7 @@ public class StudentUI {
         System.out.println("\n--- THÊM SINH VIÊN ---");
         String maSo = nhapMaSoSinhVien();
         if (danhSachSinhVien.containsKey(maSo)) {
-            System.out.println("Mã số đã tồn tại!");
+            System.out.println("Mã số đã tồn tại");
             return;
         }
 
@@ -40,7 +40,7 @@ public class StudentUI {
         double diemTB = nhapDiemTrungBinh();
         Student svMoi = new Student(maSo, hoTen, diemTB);
         danhSachSinhVien.put(maSo, svMoi);
-        System.out.println("Thêm thành công!");
+        System.out.println("Thêm thành công");
     }
 
     public void xoaSinhVien() throws IOException {
@@ -49,9 +49,9 @@ public class StudentUI {
         
         if (danhSachSinhVien.containsKey(maSo)) {
             danhSachSinhVien.remove(maSo);
-            System.out.println("Xóa thành công!");
+            System.out.println("Xóa thành công");
         } else {
-            System.out.println("Không tìm thấy sinh viên!");
+            System.out.println("Không tìm thấy sinh viên");
         }
     }
 
@@ -63,7 +63,7 @@ public class StudentUI {
         if (sv != null) {
             hienThiThongTinSV(sv);
         } else {
-            System.out.println("Không tìm thấy sinh viên!");
+            System.out.println("Không tìm thấy sinh viên");
         }
     }
 
@@ -71,26 +71,24 @@ public class StudentUI {
         System.out.println("\n--- DANH SÁCH SINH VIÊN ---");
 
         if (danhSachSinhVien.isEmpty()) {
-            System.out.println("Danh sách trống!");
+            System.out.println("Danh sách trống");
             return;
         }
         
         danhSachSapXep.clear();
         danhSachSapXep.addAll(danhSachSinhVien.values());
-        // Sắp xếp theo tên (từ cuối cùng trong họ tên)
+        
         Collections.sort(danhSachSapXep, (sv1, sv2) -> {
             String ten1 = sv1.getHoTen().trim();
             String ten2 = sv2.getHoTen().trim();
-            // Lấy từ cuối cùng (tên riêng)
             String[] parts1 = ten1.split("\\s+");
             String[] parts2 = ten2.split("\\s+");
             String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
             String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
             
-            // So sánh tên riêng trước
+           
             int cmp = lastName1.compareToIgnoreCase(lastName2);
             if (cmp != 0) return cmp;
-            // Nếu tên giống nhau thì so sánh toàn bộ họ tên
             return ten1.compareToIgnoreCase(ten2);
         });
         
@@ -114,9 +112,9 @@ public class StudentUI {
         if (sv != null) {
             double diemMoi = nhapDiemTrungBinh();
             sv.setDiemTrungBinh(diemMoi);
-            System.out.println("Cập nhật thành công!");
+            System.out.println("Cập nhật thành công");
         } else {
-            System.out.println("Không tìm thấy sinh viên!");
+            System.out.println("Không tìm thấy sinh viên");
         }
     }
 
@@ -131,7 +129,7 @@ public class StudentUI {
         }
         
         if (svHocBong.isEmpty()) {
-            System.out.println("Không có sinh viên nào đạt học bổng!");
+            System.out.println("Không có sinh viên nào đạt học bổng");
             return;
         }
         
@@ -155,7 +153,7 @@ public class StudentUI {
         String[] ketQua = {"", "XUẤT SẮC", "GIỎI", "KHÁ", "TRUNG BÌNH", "YẾU", "KÉM"};
         
         if (luaChon < 1 || luaChon > 6) {
-            System.out.println("Chọn không hợp lệ!");
+            System.out.println("Chọn không hợp lệ");
             return;
         }
         
@@ -169,7 +167,7 @@ public class StudentUI {
         }
         
         if (ketQuaList.isEmpty()) {
-            System.out.println("Không có sinh viên nào!");
+            System.out.println("Không có sinh viên nào");
             return;
         }
 
@@ -201,9 +199,9 @@ public class StudentUI {
             try {
                 double diem = Double.parseDouble(scanner.nextLine());
                 if (diem >= 0 && diem <= 10) return diem;
-                System.out.println("Điểm phải từ 0 đến 10!");
+                System.out.println("Điểm phải từ 0 đến 10");
             } catch (NumberFormatException e) {
-                System.out.println("Vui lòng nhập số!");
+                System.out.println("Vui lòng nhập số");
             }
         }
     }
