@@ -36,7 +36,7 @@ public class Student {
     public void setDiemTrungBinh(double diemTrungBinh) {
         this.diemTrungBinh = diemTrungBinh;
         this.ketQuaHocTap = tinhKetQuaHocTap(diemTrungBinh);
-    }
+    }   
     
     public boolean coDatHocBong() {
         return diemTrungBinh >= 9.0;
