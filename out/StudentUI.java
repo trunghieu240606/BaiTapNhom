@@ -1,6 +1,8 @@
 
 import java.io.*;
 import java.util.*;
+import java.text.Collator;
+import java.util.Locale;
 
 public class StudentUI {
     private HashMap<String, Student> danhSachSinhVien;
@@ -94,6 +96,9 @@ public class StudentUI {
         danhSachSapXep.clear();
         danhSachSapXep.addAll(danhSachSinhVien.values());
 
+        Collator collator = Collator.getInstance(new Locale("vi", "VN"));
+        collator.setStrength(Collator.PRIMARY);
+
         Collections.sort(danhSachSapXep, (sv1, sv2) -> {
             String ten1 = sv1.getHoTen().trim();
             String ten2 = sv2.getHoTen().trim();
@@ -102,10 +107,10 @@ public class StudentUI {
             String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
             String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
 
-            int cmp = lastName1.compareToIgnoreCase(lastName2);
+            int cmp = collator.compare(lastName1, lastName2);
             if (cmp != 0)
                 return cmp;
-            return ten1.compareToIgnoreCase(ten2);
+            return collator.compare(ten1, ten2);
         });
 
         System.out.printf("%-5s %-12s %-25s %-8s %-15s %-12s\n",
@@ -202,6 +207,9 @@ public class StudentUI {
         ArrayList<Student> danhSachSapXepTemp = new ArrayList<>();
         danhSachSapXepTemp.addAll(danhSachSinhVien.values());
 
+        Collator collator = Collator.getInstance(new Locale("vi", "VN"));
+        collator.setStrength(Collator.PRIMARY);
+
         Collections.sort(danhSachSapXepTemp, (sv1, sv2) -> {
             String ten1 = sv1.getHoTen().trim();
             String ten2 = sv2.getHoTen().trim();
@@ -210,10 +218,10 @@ public class StudentUI {
             String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
             String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
 
-            int cmp = lastName1.compareToIgnoreCase(lastName2);
+            int cmp = collator.compare(lastName1, lastName2);
             if (cmp != 0)
                 return cmp;
-            return ten1.compareToIgnoreCase(ten2);
+            return collator.compare(ten1, ten2);
         });
 
         return danhSachSapXepTemp.indexOf(sv) + 1;
@@ -248,29 +256,20 @@ public class StudentUI {
         while (true) {
             System.out.print("Nhập họ tên: ");
             String hoTen = scanner.nextLine().trim();
-            if (!hoTen.isEmpty() && hoTen.codePoints().noneMatch(Character::isDigit)) {
+            if (!hoTen.isEmpty() && hoTen.matches("^[\\p{L}\\s]+$")) {
                 return hoTen;
             }
-            System.out.println("Họ tên không được để trống và không được chứa số");
+            System.out.println("Họ tên không được để trống, chỉ được chứa chữ cái và khoảng trắng, không được chứa số hoặc ký tự đặc biệt");
         }
     }
 
     private void taoSinhVienMau() {
         String[][] data = {
-                { "2411062483", "Nguyễn Thế Bảo An", "8.5" },
-                { "2411062645", "Lê Công Anh", "7.2" },
-                { "2411062620", "Nguyễn Mai Anh", "6.8" },
-                { "2411062650", "Nguyễn Ngọc Hải Anh", "9.1" },
-                { "2411062526", "Phạm Bảo Hoàng Anh", "5.5" },
-                { "2411062637", "Vũ Tuấn Anh", "8.9" },
-                { "2411062326", "Bùi Thị Thanh Bình", "7.8" },
                 { "2411062411", "Nguyễn Đăng Cảnh", "6.3" },
                 { "2411062558", "Nguyễn Bá Mạnh Cường", "4.2" },
                 { "2411062467", "Nguyễn Cao Cường", "8.1" },
                 { "2411062493", "Lê Công Dũng", "7.5" },
                 { "2411062179", "Nguyễn Thành Hải Dương", "9.4" },
-                { "2411062269", "Phạm Thái Dương", "5.9" },
-                { "2411062490", "Vũ Đại Dương", "6.7" },
                 { "2411062550", "Lê Minh Đức", "8.3" },
                 { "2411062406", "Lâm Chí Hào", "7.1" },
                 { "2411062192", "Trần Thị Hằng", "4.8" },
@@ -279,7 +278,17 @@ public class StudentUI {
                 { "2411062166", "Vy Thị Thanh Hòa", "9.0" },
                 { "2411062615", "Đặng Quốc Huy", "5.2" },
                 { "2411062304", "Phan Quang Huy", "7.9" },
-                { "2411062548", "Nguyễn Thị Ngọc Huyền", "8.0" }
+                { "2411062548", "Nguyễn Thị Ngọc Huyền", "8.0" },
+                { "2411062483", "Nguyễn Thế Bảo An", "8.5" },
+                { "2411062645", "Lê Công Anh", "7.2" },
+                { "2411062620", "Nguyễn Mai Anh", "6.8" },
+                { "2411062650", "Nguyễn Ngọc Hải Anh", "9.1" },
+                { "2411062526", "Phạm Bảo Hoàng Anh", "5.5" },
+                { "2411062637", "Vũ Tuấn Anh", "8.9" },
+                { "2411062326", "Bùi Thị Thanh Bình", "7.8" },
+                { "2411062269", "Phạm Thái Dương", "5.9" },
+                { "2411062490", "Vũ Đại Dương", "6.7" },
+               
         };
 
         for (String[] svData : data) {
