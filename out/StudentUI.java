@@ -95,23 +95,7 @@ public class StudentUI {
 
         danhSachSapXep.clear();
         danhSachSapXep.addAll(danhSachSinhVien.values());
-
-        Collator collator = Collator.getInstance(new Locale("vi", "VN"));
-        collator.setStrength(Collator.PRIMARY);
-
-        Collections.sort(danhSachSapXep, (sv1, sv2) -> {
-            String ten1 = sv1.getHoTen().trim();
-            String ten2 = sv2.getHoTen().trim();
-            String[] parts1 = ten1.split("\\s+");
-            String[] parts2 = ten2.split("\\s+");
-            String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
-            String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
-
-            int cmp = collator.compare(lastName1, lastName2);
-            if (cmp != 0)
-                return cmp;
-            return collator.compare(ten1, ten2);
-        });
+        sapXepTheoTen(danhSachSapXep);
 
         System.out.printf("%-5s %-12s %-25s %-8s %-15s %-12s\n",
                 "STT", "MSSV", "Họ Tên", "Điểm", "Kết Quả", "Học Bổng");
@@ -162,7 +146,26 @@ public class StudentUI {
             return;
         }
 
-        Collections.sort(svHocBong, (sv1, sv2) -> Double.compare(sv2.getDiemTrungBinh(), sv1.getDiemTrungBinh()));
+        Collator collator = Collator.getInstance(new Locale("vi", "VN"));
+        collator.setStrength(Collator.PRIMARY);
+        
+        Collections.sort(svHocBong, (sv1, sv2) -> {
+            int diemCmp = Double.compare(sv2.getDiemTrungBinh(), sv1.getDiemTrungBinh());
+            if (diemCmp != 0)
+                return diemCmp;
+            
+            String ten1 = sv1.getHoTen().trim();
+            String ten2 = sv2.getHoTen().trim();
+            String[] parts1 = ten1.split("\\s+");
+            String[] parts2 = ten2.split("\\s+");
+            String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
+            String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
+
+            int cmp = collator.compare(lastName1, lastName2);
+            if (cmp != 0)
+                return cmp;
+            return collator.compare(ten1, ten2);
+        });
 
         System.out.printf("%-5s %-12s %-25s %-8s\n", "STT", "MSSV", "Họ Tên", "Điểm");
         int stt = 1;
@@ -194,6 +197,8 @@ public class StudentUI {
             return;
         }
 
+        sapXepTheoTen(ketQuaList);
+
         System.out.println("\nKết quả: " + ketQuaTim);
         System.out.printf("%-5s %-12s %-25s %-8s\n", "STT", "MSSV", "Họ Tên", "Điểm");
         int stt = 1;
@@ -203,14 +208,11 @@ public class StudentUI {
         }
     }
 
-    private int timThuTuTrongDanhSach(Student sv) {
-        ArrayList<Student> danhSachSapXepTemp = new ArrayList<>();
-        danhSachSapXepTemp.addAll(danhSachSinhVien.values());
-
+    public void sapXepTheoTen(ArrayList<Student> danhSach) {
         Collator collator = Collator.getInstance(new Locale("vi", "VN"));
         collator.setStrength(Collator.PRIMARY);
 
-        Collections.sort(danhSachSapXepTemp, (sv1, sv2) -> {
+        Collections.sort(danhSach, (sv1, sv2) -> {
             String ten1 = sv1.getHoTen().trim();
             String ten2 = sv2.getHoTen().trim();
             String[] parts1 = ten1.split("\\s+");
@@ -223,6 +225,12 @@ public class StudentUI {
                 return cmp;
             return collator.compare(ten1, ten2);
         });
+    }
+
+    public int timThuTuTrongDanhSach(Student sv) {
+        ArrayList<Student> danhSachSapXepTemp = new ArrayList<>();
+        danhSachSapXepTemp.addAll(danhSachSinhVien.values());
+        sapXepTheoTen(danhSachSapXepTemp);
 
         return danhSachSapXepTemp.indexOf(sv) + 1;
     }
@@ -263,7 +271,7 @@ public class StudentUI {
         }
     }
 
-    private void taoSinhVienMau() {
+    public void taoSinhVienMau() {
         String[][] data = {
                 { "2411062411", "Nguyễn Đăng Cảnh", "6.3" },
                 { "2411062558", "Nguyễn Bá Mạnh Cường", "4.2" },
@@ -298,13 +306,13 @@ public class StudentUI {
         }
     }
 
-    private void themVaoIndexHocLuc(Student sv) {
+    public void themVaoIndexHocLuc(Student sv) {
         String hocLuc = sv.getKetQuaHocTap();
         indexHocLuc.putIfAbsent(hocLuc, new ArrayList<>());
         indexHocLuc.get(hocLuc).add(sv);
     }
 
-    private void xoaKhoiIndexHocLuc(Student sv, String hocLuc) {
+    public void xoaKhoiIndexHocLuc(Student sv, String hocLuc) {
         ArrayList<Student> danhSach = indexHocLuc.get(hocLuc);
         if (danhSach != null) {
             danhSach.remove(sv);
