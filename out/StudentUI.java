@@ -1,14 +1,35 @@
 
 import java.io.*;
-import java.util.*;
 import java.text.Collator;
-import java.util.Locale;
+import java.util.*;
 
 public class StudentUI {
     private HashMap<String, Student> danhSachSinhVien;
     private ArrayList<Student> danhSachSapXep;
     private HashMap<String, ArrayList<Student>> indexHocLuc;
     private Scanner scanner;
+
+    private static final Collator VI_COLLATOR;
+    private static final Comparator<Student> NAME_COMPARATOR;
+
+    static {
+        VI_COLLATOR = Collator.getInstance(new Locale("vi", "VN"));
+        VI_COLLATOR.setStrength(Collator.PRIMARY);
+
+        NAME_COMPARATOR = (sv1, sv2) -> {
+            String ten1 = sv1.getHoTen().trim();
+            String ten2 = sv2.getHoTen().trim();
+            String[] parts1 = ten1.split("\\s+");
+            String[] parts2 = ten2.split("\\s+");
+            String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
+            String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
+
+            int cmp = VI_COLLATOR.compare(lastName1, lastName2);
+            if (cmp != 0)
+                return cmp;
+            return VI_COLLATOR.compare(ten1, ten2);
+        };
+    }
 
     public StudentUI() {
         danhSachSinhVien = new HashMap<>();
@@ -53,14 +74,28 @@ public class StudentUI {
 
         if (danhSachSinhVien.containsKey(maSo)) {
             Student sv = danhSachSinhVien.get(maSo);
-
-            String hocLuc = sv.getKetQuaHocTap();
-
-            xoaKhoiIndexHocLuc(sv, hocLuc);
-
-            danhSachSinhVien.remove(maSo);
-
-            System.out.println("Xóa thành công");
+            
+            
+            System.out.println("\nThông tin sinh viên:");
+            System.out.printf("MSSV: %s\n", sv.getMaSoSinhVien());
+            System.out.printf("Họ Tên: %s\n", sv.getHoTen());
+            System.out.printf("Điểm TB: %.2f\n", sv.getDiemTrungBinh());
+            System.out.printf("Kết Quả: %s\n", sv.getKetQuaHocTap());
+            
+            
+            System.out.print("\nBạn có chắc chắn muốn xóa sinh viên này? (y/n): ");
+            String xacNhan = scanner.nextLine().trim().toLowerCase();
+            
+            if (xacNhan.equals("y")) {
+                String hocLuc = sv.getKetQuaHocTap();
+                xoaKhoiIndexHocLuc(sv, hocLuc);
+                danhSachSinhVien.remove(maSo);
+                System.out.println("Xóa thành công");
+            } else if (xacNhan.equals("n")) {
+                System.out.println("Đã hủy xóa sinh viên");
+            } else {
+                System.out.println("Lựa chọn không hợp lệ. Đã hủy xóa sinh viên");
+            }
         } else {
             System.out.println("Không tìm thấy sinh viên");
         }
@@ -146,25 +181,11 @@ public class StudentUI {
             return;
         }
 
-        Collator collator = Collator.getInstance(new Locale("vi", "VN"));
-        collator.setStrength(Collator.PRIMARY);
-        
         Collections.sort(svHocBong, (sv1, sv2) -> {
             int diemCmp = Double.compare(sv2.getDiemTrungBinh(), sv1.getDiemTrungBinh());
             if (diemCmp != 0)
                 return diemCmp;
-            
-            String ten1 = sv1.getHoTen().trim();
-            String ten2 = sv2.getHoTen().trim();
-            String[] parts1 = ten1.split("\\s+");
-            String[] parts2 = ten2.split("\\s+");
-            String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
-            String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
-
-            int cmp = collator.compare(lastName1, lastName2);
-            if (cmp != 0)
-                return cmp;
-            return collator.compare(ten1, ten2);
+            return NAME_COMPARATOR.compare(sv1, sv2);
         });
 
         System.out.printf("%-5s %-12s %-25s %-8s\n", "STT", "MSSV", "Họ Tên", "Điểm");
@@ -209,22 +230,7 @@ public class StudentUI {
     }
 
     public void sapXepTheoTen(ArrayList<Student> danhSach) {
-        Collator collator = Collator.getInstance(new Locale("vi", "VN"));
-        collator.setStrength(Collator.PRIMARY);
-
-        Collections.sort(danhSach, (sv1, sv2) -> {
-            String ten1 = sv1.getHoTen().trim();
-            String ten2 = sv2.getHoTen().trim();
-            String[] parts1 = ten1.split("\\s+");
-            String[] parts2 = ten2.split("\\s+");
-            String lastName1 = parts1.length > 0 ? parts1[parts1.length - 1] : ten1;
-            String lastName2 = parts2.length > 0 ? parts2[parts2.length - 1] : ten2;
-
-            int cmp = collator.compare(lastName1, lastName2);
-            if (cmp != 0)
-                return cmp;
-            return collator.compare(ten1, ten2);
-        });
+        Collections.sort(danhSach, NAME_COMPARATOR);
     }
 
     public int timThuTuTrongDanhSach(Student sv) {
